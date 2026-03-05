@@ -1,17 +1,22 @@
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import { Redirect } from "expo-router";
+import { View, ActivityIndicator } from "react-native";
+import { useAuth } from "@clerk/expo";
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Link href={"/login"}>
-        <Text style={{ fontFamily: "OutfitRegular", fontSize: 24 }}>Login</Text>
-      </Link>
-    </View>
-  );
+  const { isLoaded, isSignedIn } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  return <Redirect href={isSignedIn ? "/(tabs)/home" : "/login"} />;
 }

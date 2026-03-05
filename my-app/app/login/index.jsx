@@ -80,7 +80,7 @@ export default function Login() {
                     session: sessionId,
                 })
 
-                router.replace('/home')
+                router.replace('/(tabs)/home')
             } else {
                 const taskKey = signIn?.firstFactorVerification?.status || signIn?.status || updatedSignUp?.status || 'unknown'
                 const missingFields = updatedSignUp?.missingFields?.length

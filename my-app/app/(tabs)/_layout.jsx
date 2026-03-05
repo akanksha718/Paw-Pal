@@ -1,0 +1,14 @@
+import {View,Text} from 'react-native'
+import { Tabs } from "expo-router";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Colors from '../../constants/Colors';
+export default function TabsLayout({children}) {
+  return (
+    <Tabs screenOptions={{tabBarActiveTintColor:Colors.PRIMARY}}>
+        <Tabs.Screen name="home" options={{title:"Home" ,headerShown:false,tabBarIcon:({color})=><Ionicons name="home" size={24} color="black" />}} />
+        <Tabs.Screen name="inbox" options={{title:"Inbox",headerShown:false,tabBarIcon:({color})=><Ionicons name="mail" size={24} color="black" />}} />
+        <Tabs.Screen name="favorite" options={{title:"Favorites",headerShown:false,tabBarIcon:({color})=><Ionicons name="heart" size={24} color="black" />}} />
+        <Tabs.Screen name="Profile" options={{title:"Profile",headerShown:false,tabBarIcon:({color})=><Ionicons name="person" size={24} color="black" />}} />
+    </Tabs>
+  )
+}
