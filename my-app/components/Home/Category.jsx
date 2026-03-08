@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../config/FirebaseConfig';
 
-export default function Category() {
-    const [category, setCategory] = React.useState([]);
+export default function Category({ onCategorySelect }) {
+    const [categories, setCategories] = React.useState([]);
     const [error, setError] = React.useState('');
     const [selectedCategory, setSelectedCategory] = React.useState('');
 
@@ -17,7 +17,15 @@ export default function Category() {
             setError('');
             const snapshot = await getDocs(collection(db, 'Category'));
             const categoryData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-            setCategory(categoryData);
+            setCategories(categoryData);
+
+            if (categoryData.length > 0) {
+                const firstLabel = getCategoryLabel(categoryData[0]);
+                setSelectedCategory(firstLabel);
+                if (typeof onCategorySelect === 'function') {
+                    onCategorySelect(firstLabel);
+                }
+            }
         } catch (err) {
             console.error('Error loading categories:', err);
             if (err?.code === 'permission-denied') {
@@ -45,7 +53,7 @@ export default function Category() {
 
             <FlatList
                 horizontal
-                data={category}
+                data={categories}
                 keyExtractor={(item, index) => item?.id || String(index)}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
@@ -55,7 +63,11 @@ export default function Category() {
                     const isActive = selectedCategory === label;
                     return (
                     <Pressable
-                        onPress={() => setSelectedCategory(label)}
+                        onPress={() => {setSelectedCategory(label);
+                            if (typeof onCategorySelect === 'function') {
+                                onCategorySelect(label);
+                            }
+                        }}
                         style={[styles.itemContainer, isActive && styles.itemContainerActive]}
                     >
                         {imageUri ? (
